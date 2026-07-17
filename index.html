@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WB NEET College Predictor 2024</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: rgba(30, 41, 59, 0.7);
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #10b981;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            min-height: 100vh;
+            background-image: radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
+                              radial-gradient(circle at 85% 30%, rgba(16, 185, 129, 0.15), transparent 25%);
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #60a5fa, #34d399);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .glass-panel {
+            background: var(--card-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            margin-bottom: 2rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .form-group label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .form-group input, .form-group select {
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+        }
+
+        .checkbox-group {
+            flex-direction: row;
+            align-items: center;
+            grid-column: 1 / -1;
+        }
+        
+        .checkbox-group input {
+            width: 1.2rem;
+            height: 1.2rem;
+            cursor: pointer;
+        }
+
+        .btn-predict {
+            grid-column: 1 / -1;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-predict:hover {
+            background: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.3);
+        }
+        
+        .btn-predict:active {
+            transform: translateY(0);
+        }
+
+        .results-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            display: none;
+        }
+
+        .results-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .college-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .college-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid var(--border);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            transition: all 0.2s ease;
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        
+        .college-card:hover {
+            background: rgba(30, 41, 59, 0.8);
+            border-color: rgba(96, 165, 250, 0.3);
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .institute-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            line-height: 1.4;
+        }
+
+        .badge {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--accent);
+            padding: 0.25rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .card-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 1rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            padding-top: 0.75rem;
+            margin-top: 0.25rem;
+        }
+        
+        .detail-item strong {
+            display: block;
+            color: #cbd5e1;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+        
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <h1>Rank Predictor</h1>
+            <p>Predict your potential medical colleges based on 2024 cutoff data</p>
+        </div>
+
+        <div class="glass-panel">
+            <form id="predictorForm" onsubmit="event.preventDefault(); predictColleges();">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="rank">All India Rank</label>
+                        <input type="number" id="rank" placeholder="Enter your rank e.g. 15000" required min="1">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="category">Your Category</label>
+                        <select id="category" required>
+                            <option value="General">General / UR</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                            <option value="OBC-A">OBC-A</option>
+                            <option value="OBC-B">OBC-B</option>
+                            <option value="EWS">EWS</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="pwd">
+                        <label for="pwd" style="font-size:1rem; cursor:pointer;">Are you a PwD candidate?</label>
+                    </div>
+
+                    <button type="submit" class="btn-predict">Find My Colleges</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="results-header" id="resultsHeader">
+            <h2>Predicted Options</h2>
+            <span class="badge" id="resultCount" style="background: rgba(59, 130, 246, 0.1); color: var(--primary);"></span>
+        </div>
+
+        <div id="resultsContainer" class="college-list">
+            <div class="glass-panel empty-state" id="emptyState">
+                Enter your details above to see the colleges you may qualify for.
+            </div>
+        </div>
+    </div>
+
+    <!-- Load the generated data -->
+    <script src="data.js"></script>
+    
+    <script>
+        function getEligibleCategories(userCat, isPwd) {
+            let eligible = [];
+            
+            // Everyone is eligible for UR
+            eligible.push('UR');
+            
+            if (userCat === 'SC') eligible.push('SC');
+            if (userCat === 'ST') eligible.push('ST');
+            if (userCat === 'EWS') eligible.push('EWS');
+            if (userCat === 'OBC-A') {
+                eligible.push('OBC-A (Non- Creamy Layer)');
+                eligible.push('OBC (Non-Creamy Layer)');
+            }
+            if (userCat === 'OBC-B') {
+                eligible.push('OBC-B (Non- Creamy Layer)');
+                eligible.push('OBC (Non-Creamy Layer)');
+            }
+            
+            if (isPwd) {
+                // If PwD, add PwD variants of eligible categories
+                let pwdEligible = eligible.map(c => c + ' PwD');
+                return eligible.concat(pwdEligible);
+            }
+            
+            return eligible;
+        }
+
+        function predictColleges() {
+            const rank = parseInt(document.getElementById('rank').value);
+            const category = document.getElementById('category').value;
+            const isPwd = document.getElementById('pwd').checked;
+            
+            if (!rank || isNaN(rank)) return;
+
+            const eligibleCats = getEligibleCategories(category, isPwd);
+            
+            // Filter colleges where the cutoff rank is >= user's rank
+            // and the allotted category is one the user is eligible for
+            const predicted = collegeData.filter(item => {
+                return eligibleCats.includes(item.Allotted_Cat_Clean) && item['All India Rank'] >= rank;
+            });
+            
+            // Sort by cutoff rank (closest to user's rank first)
+            predicted.sort((a, b) => a['All India Rank'] - b['All India Rank']);
+            
+            // Group by Institute to show the best quota/category match per institute
+            const instituteMap = new Map();
+            predicted.forEach(item => {
+                const key = item.Institute + '-' + item.Course;
+                // If not added or if this seat is more "favorable" (we just store all or best one)
+                // Let's store all distinct quotas per institute
+                if (!instituteMap.has(key)) {
+                    instituteMap.set(key, []);
+                }
+                instituteMap.get(key).push(item);
+            });
+
+            renderResults(instituteMap, rank);
+        }
+
+        function renderResults(instituteMap, userRank) {
+            const container = document.getElementById('resultsContainer');
+            const header = document.getElementById('resultsHeader');
+            const countBadge = document.getElementById('resultCount');
+            
+            container.innerHTML = '';
+            header.style.display = 'flex';
+            
+            if (instituteMap.size === 0) {
+                container.innerHTML = `
+                    <div class="glass-panel no-results">
+                        <h3>No matches found</h3>
+                        <p style="margin-top: 0.5rem">Based on the 2024 cutoff data, your rank (${userRank}) is above the cutoffs for all available colleges in your category.</p>
+                    </div>`;
+                countBadge.textContent = '0 Colleges';
+                return;
+            }
+            
+            countBadge.textContent = instituteMap.size + ' Colleges';
+            
+            let delay = 0;
+            
+            for (const [key, items] of instituteMap.entries()) {
+                const primaryItem = items[0]; // Take the first matched variant
+                
+                const card = document.createElement('div');
+                card.className = 'college-card';
+                card.style.animationDelay = `${delay}s`;
+                delay += 0.05;
+                
+                let quotas = [...new Set(items.map(i => i['Allotted Quota']))].join(', ');
+                let maxCutoff = Math.max(...items.map(i => i['All India Rank']));
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <div class="institute-name">${primaryItem.Institute}</div>
+                        <div class="badge">${primaryItem.Course}</div>
+                    </div>
+                    <div class="card-details">
+                        <div class="detail-item">
+                            <strong>Available Quota</strong>
+                            ${quotas}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Closing Rank</strong>
+                            ${maxCutoff}
+                        </div>
+                        <div class="detail-item">
+                            <strong>Margin</strong>
+                            +${maxCutoff - userRank} ranks
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+    </script>
+</body>
+</html>
