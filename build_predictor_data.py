@@ -1,7 +1,7 @@
 import pandas as pd
 import json
 
-df = pd.read_csv('allotment_result.csv')
+df = pd.read_csv('allotment_result_2025.csv')
 
 df['All India Rank'] = pd.to_numeric(df['All India Rank'], errors='coerce')
 df = df.dropna(subset=['All India Rank'])
